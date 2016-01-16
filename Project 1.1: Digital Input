@@ -1,0 +1,23 @@
+const int in=12;
+const int out=5;
+int current=LOW;
+
+void setup()
+{
+pinMode(in,INPUT);
+pinMode(out,OUTPUT);
+}
+
+void loop()
+{
+current=digitalRead(in);
+if(current==HIGH)
+{
+  digitalWrite(out,LOW);
+  delay(10);
+}
+else
+{
+  digitalWrite(out,HIGH);
+}
+}
