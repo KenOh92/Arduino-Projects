@@ -1,0 +1,34 @@
+int current=LOW;
+
+void setup()
+{
+pinMode(5,INPUT);  
+pinMode(8,OUTPUT); //traffic red
+pinMode(9,OUTPUT); //traffic green
+pinMode(10,OUTPUT); //pedestrian1 
+pinMode(11,OUTPUT); //pedestrian2
+digitalWrite(8,0);
+digitalWrite(9,1);
+digitalWrite(10,1);
+digitalWrite(11,0);
+}
+
+void loop() 
+{
+    current=digitalRead(5);
+    if(current==HIGH)
+      {
+    delay(2000);
+    digitalWrite(8,1);digitalWrite(9,1);//yellow
+    delay(2000);
+    digitalWrite(8,1);digitalWrite(9,0);//red
+    delay(500);
+    digitalWrite(10,0);//red
+    digitalWrite(11,1);//green
+    delay(5000);
+    digitalWrite(8,0);
+    digitalWrite(9,1);
+    digitalWrite(10,1);
+    digitalWrite(11,0);
+      } 
+}
