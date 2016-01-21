@@ -1,0 +1,38 @@
+#include <Servo.h>
+
+long duration,distance;
+const int echoPin=7;
+const int trigPin=8;
+int far;
+Servo myservo;
+
+void setup() 
+{
+  Serial.begin(9600);
+  pinMode(trigPin,OUTPUT);
+  pinMode(echoPin,INPUT);
+  myservo.attach(6);
+}
+
+void loop() 
+{
+  far=servo();
+  far = map(far, 2, 100, 0, 180);     // scale it to use it with the servo (value between 0 and 180) 
+  myservo.write(far);                  // sets the servo position according to the scaled value 
+  delay(15);        
+}
+
+int servo() 
+{
+    digitalWrite(trigPin,LOW);
+    delayMicroseconds(2);
+    digitalWrite(trigPin,HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin,LOW);
+    
+    duration=pulseIn(echoPin,HIGH);
+    distance = duration/57.8;
+    
+    delay(50);
+    return distance;
+}
