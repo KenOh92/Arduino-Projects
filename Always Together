@@ -1,0 +1,69 @@
+#include <Wire.h>
+#include "RTClib.h"
+#include <SevSeg.h>
+
+SevSeg sevseg;
+RTC_DS1307 rtc;
+
+void setup () 
+{
+  Serial.begin(57600);
+  #ifdef AVR
+    Wire.begin();
+  #else
+    Wire1.begin(); 
+  #endif
+    rtc.begin();
+
+  if (! rtc.isrunning()) 
+  {
+  Serial.println("RTC is NOT running!");
+ //rtc.adjust(DateTime(2016, 2, 16, 17, 23, 30));
+  }
+  
+  byte numDigits = 4;
+  byte digitPins[] = {2, 3, 4, 5};
+  byte segmentPins[] = {6, 7, 8, 9, 10, 11, 12, 13};
+ 
+  sevseg.begin(COMMON_ANODE, numDigits, digitPins, segmentPins);
+  sevseg.setBrightness(30); 
+}
+
+void loop ()
+{
+    static byte decPlace = 0;
+    DateTime now = rtc.now();
+    
+    Serial.print(now.year(), DEC);
+    Serial.print('/');
+    Serial.print(now.month(), DEC);
+    Serial.print('/');
+    Serial.print(now.day(), DEC);
+    Serial.print(' ');
+    Serial.print(now.hour(), DEC);
+    Serial.print(':');
+    Serial.print(now.minute(), DEC);
+    Serial.print(':');
+    Serial.print(now.second(), DEC);
+    Serial.println();
+    
+    Serial.print(" Since midnight 1/1/1970 = ");
+    Serial.print(now.unixtime());
+    Serial.print("s = ");
+    Serial.print(now.unixtime() / 86400L);
+    Serial.println("d");
+    Serial.print("We've been together for ");
+    Serial.print((now.unixtime()-1397001600));
+    Serial.println(" seconds");
+    Serial.print("We've been together for ");
+    Serial.print((now.unixtime()-1397001600)/86400L);
+    Serial.println(" days");
+    
+    Serial.println();
+
+    sevseg.setNumber((now.unixtime()-1397001600)/86400L, decPlace);
+    decPlace++;
+    decPlace%=4;
+    sevseg.refreshDisplay();
+    
+}
